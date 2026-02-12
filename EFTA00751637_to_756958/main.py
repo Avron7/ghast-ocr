@@ -361,7 +361,7 @@ if __name__ == "__main__":
         f_text = "".join(f_chars)
         f_lines = f_text.split("\n")
         f_lines = [line.rstrip() for line in f_lines]
-        f_path = os.path.join("output", fname)
+        f_path = os.path.join("out_plaintext", fname)
         with open(f_path, "w") as f:
             f.writelines([(line + "\n") for line in f_lines])
         print(f"Wrote: {f_path}")

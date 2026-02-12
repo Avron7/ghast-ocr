@@ -9,9 +9,9 @@ EXTENSIONS = {
 }
 
 
-def decode_all(root_dir):
+def decode_all(plaintext_dir, blob_dir, output_dir):
 
-    for filepath in get_plaintext_files(root_dir):
+    for filepath in get_plaintext_files(plaintext_dir):
         code = str(re.search(r"(EFTA\d+)_", os.path.split(filepath)[1]).group(1))
         print(f"Processing {code}")
         with open(filepath, "r") as f:
@@ -21,10 +21,10 @@ def decode_all(root_dir):
             print(f"  Found a {content_type} blob (length={len(blob)})")
             if content_type in EXTENSIONS:
                 ext = EXTENSIONS[content_type]
-                rawfile_name = os.path.join(root_dir, f"{code}_raw{idx}_{ext}.txt")
-                file_name = os.path.join(root_dir, f"{code}_{idx}.{ext}")
+                rawfile_name = os.path.join(blob_dir, f"{code}_raw{idx}_{ext}.txt")
+                file_name = os.path.join(output_dir, f"{code}.{ext}")
             else:
-                rawfile_name = os.path.join(root_dir, f"{code}_raw{idx}.txt")
+                rawfile_name = os.path.join(blob_dir, f"{code}_raw{idx}.txt")
                 file_name = None
 
             with open(rawfile_name, "w") as f:
@@ -39,10 +39,10 @@ def decode_all(root_dir):
                 print(f"    Wrote: {file_name}")
 
 
-def get_plaintext_files(root_dir):
-    for fname in os.listdir(root_dir):
+def get_plaintext_files(plaintext_dir):
+    for fname in os.listdir(plaintext_dir):
         if fname.endswith("plaintext.txt"):
-            yield os.path.join(root_dir, fname)
+            yield os.path.join(plaintext_dir, fname)
 
 
 def extract_base64_blobs(text: str):
@@ -57,4 +57,4 @@ def extract_base64_blobs(text: str):
 
 
 if __name__ == "__main__":
-    decode_all("output")
+    decode_all("out_plaintext", "out_extracted_blobs", "output")
